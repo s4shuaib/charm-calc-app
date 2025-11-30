@@ -284,14 +284,14 @@ const BookDetail = () => {
         return;
       }
 
-      // Insert member with temporary user_id (will be updated when they log in)
+      // Insert member with null user_id (will be updated when they log in)
       const { error } = await supabase
         .from('book_members')
         .insert({
           book_id: bookId,
           email: newMemberEmail.toLowerCase(),
           role: newMemberRole,
-          user_id: '00000000-0000-0000-0000-000000000000' // Placeholder until user logs in
+          user_id: null
         });
 
       if (error) throw error;
@@ -329,22 +329,22 @@ const BookDetail = () => {
     <div className="min-h-screen bg-background pb-24">
       {/* Header */}
       <header className="bg-card border-b border-border px-4 py-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <Button variant="ghost" size="icon" className="shrink-0" onClick={() => navigate("/")}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
-            <div>
-              <h1 className="font-semibold text-foreground">{book?.name}</h1>
-              <p className="text-xs text-muted-foreground">Add Member, Book Activity etc</p>
+            <div className="min-w-0">
+              <h1 className="font-semibold text-foreground truncate">{book?.name}</h1>
+              <p className="text-xs text-muted-foreground hidden sm:block">Add Member, Book Activity etc</p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1 sm:gap-2 shrink-0">
             <Dialog open={isMembersDialogOpen} onOpenChange={setIsMembersDialogOpen}>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <Users className="h-4 w-4 mr-1" />
-                  Members
+                <Button variant="outline" size="sm" className="text-xs sm:text-sm">
+                  <Users className="h-4 w-4 sm:mr-1" />
+                  <span className="hidden sm:inline">Members</span>
                 </Button>
               </DialogTrigger>
               <DialogContent className="max-w-md">
@@ -420,18 +420,20 @@ const BookDetail = () => {
               size="sm"
               onClick={handleImportCSV}
               disabled={isImporting}
+              className="text-xs sm:text-sm"
             >
-              <Upload className="h-4 w-4 mr-1" />
-              {isImporting ? 'Importing...' : 'Import'}
+              <Upload className="h-4 w-4 sm:mr-1" />
+              <span className="hidden sm:inline">{isImporting ? 'Importing...' : 'Import'}</span>
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={handleExportCSV}
               disabled={entries.length === 0}
+              className="text-xs sm:text-sm"
             >
-              <Download className="h-4 w-4 mr-1" />
-              Export
+              <Download className="h-4 w-4 sm:mr-1" />
+              <span className="hidden sm:inline">Export</span>
             </Button>
           </div>
         </div>
